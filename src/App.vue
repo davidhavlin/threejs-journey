@@ -42,6 +42,8 @@ import HelloWorld from "./components/HelloWorld.vue";
           <RouterLink to="/performance-tips">Performance Tips</RouterLink>
           <RouterLink to="/intro-loading">Intro and Loading progress</RouterLink>
           <RouterLink to="/mixing-html">Mixing HTML and WEBGL</RouterLink>
+          <RouterLink to="/test-models">Test Models</RouterLink>
+          <RouterLink to="/import-optimize">Import and Optimize</RouterLink>
         </nav>
       </div>
     </header>

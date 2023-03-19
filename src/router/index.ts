@@ -164,6 +164,16 @@ const router = createRouter({
       name: "mixing-html",
       component: () => import("../views/MixingHTMLView.vue"),
     },
+    {
+      path: "/test-models",
+      name: "test-models",
+      component: () => import("../views/TestModelsView.vue"),
+    },
+    {
+      path: "/import-optimize",
+      name: "import-optimize",
+      component: () => import("../views/ImportAndOptimizeView.vue"),
+    },
   ],
 });
 
