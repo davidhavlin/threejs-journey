@@ -36,8 +36,8 @@ export default class Environment {
     this.scene.add(this.sunLight);
 
     // pomocka pri nastavovani tienov, podla tejto pomocky potom nastavim directionalLight.shadow.camera.far a ostatne
-    // const directionLightCameraHelper = new THREE.CameraHelper(directionalLight.shadow.camera);
-    // scene.add(directionLightCameraHelper);
+    const directionLightCameraHelper = new THREE.CameraHelper(this.sunLight.shadow.camera);
+    this.scene.add(directionLightCameraHelper);
     this.debugFolder
       .add(this.sunLight, "intensity")
       .name("sunLightIntensity")

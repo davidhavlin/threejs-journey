@@ -44,6 +44,8 @@ import HelloWorld from "./components/HelloWorld.vue";
           <RouterLink to="/mixing-html">Mixing HTML and WEBGL</RouterLink>
           <RouterLink to="/test-models">Test Models</RouterLink>
           <RouterLink to="/import-optimize">Import and Optimize</RouterLink>
+          <RouterLink to="/adding-details">Portal, adding details</RouterLink>
+          <RouterLink to="/ovb-testing">OVB testing</RouterLink>
         </nav>
       </div>
     </header>

@@ -204,25 +204,6 @@ const startLoop = (renderer: THREE.WebGLRenderer, controls: OrbitControls) => {
   tick();
 };
 
-const onDoubleClick = () => {
-  const fullscreenElement = document.fullscreenElement || document.webkitFullscreenElement;
-  console.log("", "dbl click");
-  if (!fullscreenElement) {
-    if (canvas.value?.requestFullscreen) {
-      // doesnt work in safari
-      canvas.value?.requestFullscreen();
-    } else if (canvas.value?.webkitRequestFullscreen) {
-      canvas.value?.webkitRequestFullscreen();
-    }
-  } else {
-    if (document.exitFullscreen) {
-      document.exitFullscreen();
-    } else if (document.webkitExitFullscreen) {
-      document.webkitExitFullscreen();
-    }
-  }
-};
-
 onMounted(setRenderer);
 onBeforeUnmount(() => {
   window.removeEventListener("mousemove", handleResize);
@@ -232,7 +213,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="wrapper">
-    <canvas ref="canvas" @dblclick="onDoubleClick" />
+    <canvas ref="canvas" />
   </div>
 </template>
 

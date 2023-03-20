@@ -174,6 +174,16 @@ const router = createRouter({
       name: "import-optimize",
       component: () => import("../views/ImportAndOptimizeView.vue"),
     },
+    {
+      path: "/adding-details",
+      name: "adding-details",
+      component: () => import("../views/PortalAddingDetails.vue"),
+    },
+    {
+      path: "/ovb-testing",
+      name: "ovb-testing",
+      component: () => import("../views/OVBTesting.vue"),
+    },
   ],
 });
 

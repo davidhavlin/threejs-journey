@@ -13,9 +13,18 @@ let renderer: THREE.WebGLRenderer | null = null;
 
 //**
 // Debug
+const debugObject = {
+  bgColor: "#F3F6FB",
+};
 const gui = new dat.GUI({
   width: 400,
 });
+
+const changeRendererBg = () => {
+  renderer?.setClearColor(debugObject.bgColor);
+};
+
+gui.addColor(debugObject, "bgColor").onFinishChange(changeRendererBg);
 
 // Canvas
 
@@ -44,34 +53,46 @@ bakedTexture.encoding = THREE.sRGBEncoding;
 const bakedMaterial = new THREE.MeshBasicMaterial({ map: bakedTexture });
 
 const poleLightMaterial = new THREE.MeshBasicMaterial({ color: 0xffffe5 });
-const portalLightMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
 
-/**
- *  My Model
- */
-gltfLoader.load("/src/assets/models/MyPortal/PortalOptimized.glb", (gltf) => {
-  // v tomto pripade zbytocne traversujeme kedze portal sa zklada z 1 objektu
-  gltf.scene.traverse((child) => {
-    if (child instanceof Mesh) {
-      child.material = bakedMaterial;
-    }
-  });
+const fog = new THREE.Fog("#F3F6FB", 1, 30);
+scene.fog = fog;
 
-  const poleLightMeshs = gltf.scene.children.filter((child) =>
-    ["Cube013", "Cube018"].includes(child.name)
-  ) as Mesh[];
-  const portalLightMesh = gltf.scene.children.find((mesh) => mesh.name === "Circle") as Mesh;
-  poleLightMeshs.forEach((pole) => {
-    pole.material = poleLightMaterial;
-  });
-  portalLightMesh.material = portalLightMaterial;
+/** Floor */
+const floor = new THREE.Mesh(
+  new THREE.PlaneGeometry(20, 20),
+  new THREE.MeshStandardMaterial({ color: "grey" })
+);
+floor.rotation.x = -0.5 * Math.PI;
+floor.position.y = 0;
+floor.receiveShadow = true;
+scene.add(floor);
 
-  scene.add(gltf.scene);
-});
+const groupCubes = new THREE.Group();
+scene.add(groupCubes);
+groupCubes.position.x = -0.5;
 
-/**
- * Lights
- */
+// groupCubes.rotation.x = 2;
+// groupCubes.rotation.z = 1;
+// groupCubes.rotation.z = 0.5;
+
+const cube1 = new THREE.Mesh(
+  new THREE.BoxGeometry(0.5, 2, 0.5),
+  new THREE.MeshStandardMaterial({ color: "#B6C6E3" })
+);
+const cube2 = new THREE.Mesh(
+  new THREE.BoxGeometry(0.5, 3, 0.5),
+  new THREE.MeshStandardMaterial({ color: "#56C5D7" })
+);
+// cube2.scale.set(1, 1, 2);
+cube1.castShadow = true;
+cube2.castShadow = true;
+cube1.position.set(0, 1, 4);
+cube1.rotation.set(0, 0.3, 0);
+cube2.rotation.set(0, 0.3, 0);
+cube2.position.set(0.9, 1, 4.3);
+cube2.position.y += cube2.scale.y / 2;
+
+groupCubes.add(cube1, cube2);
 
 // Sizes
 const sizes = {
@@ -79,16 +100,30 @@ const sizes = {
   height: window.innerHeight,
 };
 
+const ambientLight = new THREE.AmbientLight("white", 1);
+scene.add(ambientLight);
+const sunLight = new THREE.DirectionalLight("#ffffff", 1);
+sunLight.castShadow = true;
+sunLight.shadow.camera.far = 15;
+sunLight.shadow.mapSize.set(1024, 1024); // quality of shadow, cim vacsie rozlisenie tym kvalitnejsie
+sunLight.shadow.normalBias = 0.05;
+sunLight.position.set(5, 4, 5);
+scene.add(sunLight);
+// const directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight, 0.2);
+const directionalLightCameraHelper = new THREE.CameraHelper(sunLight.shadow.camera);
+// directionalLightCameraHelper.visible = true;
+// scene.add(directionalLightHelper, directionalLightCameraHelper);
+scene.add(directionalLightCameraHelper);
 // Camera Group
-const cameraGroup = new THREE.Group();
-scene.add(cameraGroup);
+// const cameraGroup = new THREE.Group();
+// scene.add(cameraGroup);
 
 // Camera, fow and resolution (Aspect ratio)
 const aspectRatio = sizes.width / sizes.height;
-const camera = new THREE.PerspectiveCamera(55, aspectRatio, 0.1, 100);
-camera.position.z = 14;
-camera.position.y = 6;
-cameraGroup.add(camera);
+const camera = new THREE.PerspectiveCamera(40, aspectRatio, 0.1, 100);
+// const camera = new THREE.PerspectiveCamera(20, aspectRatio, 0.1, 100);
+camera.position.set(0, 4, 14);
+// cameraGroup.add(camera);
 
 const handleResize = () => {
   if (!camera || !renderer) return;
@@ -126,9 +161,12 @@ const setRenderer = () => {
     canvas: canvas.value,
     antialias: true,
   });
-  renderer.outputEncoding = THREE.sRGBEncoding;
+  // renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.setSize(sizes.width, sizes.height);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  changeRendererBg();
 
   startLoop(renderer, controls);
 };
@@ -138,6 +176,7 @@ const clock = new THREE.Clock();
 const startLoop = (renderer: THREE.WebGLRenderer, controls: OrbitControls) => {
   const tick = () => {
     const elapsedTime = clock.getElapsedTime();
+    // firefliesMaterial.uniforms.uTime.value = elapsedTime;
 
     controls.update();
 
