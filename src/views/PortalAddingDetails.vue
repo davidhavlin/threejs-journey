@@ -18,10 +18,18 @@ let renderer: THREE.WebGLRenderer | null = null;
 //**
 // Debug
 const debugObject = {
-  bgColor: "#443c3c",
+  bgColor: "#29262E",
+  portalColorStart: "#b076fc",
+  portalColorEnd: "#FBFBFD",
 };
 const gui = new dat.GUI({
   width: 400,
+});
+gui.addColor(debugObject, "portalColorStart").onFinishChange(() => {
+  portalLightMaterial?.uniforms.uColorStart?.value.set(debugObject.portalColorStart);
+});
+gui.addColor(debugObject, "portalColorEnd").onFinishChange(() => {
+  portalLightMaterial?.uniforms.uColorEnd?.value.set(debugObject.portalColorEnd);
 });
 
 const changeRendererBg = () => {
@@ -60,6 +68,11 @@ const bakedMaterial = new THREE.MeshBasicMaterial({ map: bakedTexture });
 const poleLightMaterial = new THREE.MeshBasicMaterial({ color: 0xffffe5 });
 // const portalLightMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
 const portalLightMaterial = new THREE.ShaderMaterial({
+  uniforms: {
+    uTime: { value: 0 },
+    uColorStart: { value: new THREE.Color(debugObject.portalColorStart) },
+    uColorEnd: { value: new THREE.Color(debugObject.portalColorEnd) },
+  },
   vertexShader: portalVertexShader,
   fragmentShader: portalFragmentShader,
 });
@@ -189,6 +202,7 @@ const startLoop = (renderer: THREE.WebGLRenderer, controls: OrbitControls) => {
   const tick = () => {
     const elapsedTime = clock.getElapsedTime();
     firefliesMaterial.uniforms.uTime.value = elapsedTime;
+    portalLightMaterial.uniforms.uTime.value = elapsedTime;
 
     controls.update();
 

@@ -16,7 +16,7 @@
     "dat.gui": "^0.7.9",
     "gsap": "^3.11.3",
     "pinia": "^2.0.23",
-    "three": "^0.146.0",
+    "three": "^0.153.0",
     "vite-plugin-glsl": "^1.0.1",
     "vue": "^3.2.41",
     "vue-router": "^4.1.5"
@@ -27,7 +27,7 @@
     "@types/dat.gui": "^0.7.7",
     "@types/jsdom": "^20.0.0",
     "@types/node": "^16.11.68",
-    "@types/three": "^0.146.0",
+    "@types/three": "^0.153.0",
     "@vitejs/plugin-vue": "^3.1.2",
     "@vue/eslint-config-prettier": "^7.0.0",
     "@vue/eslint-config-typescript": "^11.0.0",

@@ -42,10 +42,15 @@ import HelloWorld from "./components/HelloWorld.vue";
           <RouterLink to="/performance-tips">Performance Tips</RouterLink>
           <RouterLink to="/intro-loading">Intro and Loading progress</RouterLink>
           <RouterLink to="/mixing-html">Mixing HTML and WEBGL</RouterLink>
-          <RouterLink to="/test-models">Test Models</RouterLink>
           <RouterLink to="/import-optimize">Import and Optimize</RouterLink>
           <RouterLink to="/adding-details">Portal, adding details</RouterLink>
+          <RouterLink to="/test-models">TEST Models</RouterLink>
           <RouterLink to="/ovb-testing">OVB testing</RouterLink>
+          <RouterLink to="/multiple-scenes">Multiple Scenes</RouterLink>
+          <RouterLink to="/resize">Resize</RouterLink>
+          <RouterLink to="/pixel-ratio">Pixel Ratio</RouterLink>
+          <RouterLink to="/pixel-ratio2">Pixel Ratio 2</RouterLink>
+          <RouterLink to="/environment-map">Environment Map</RouterLink>
         </nav>
       </div>
     </header>
@@ -59,6 +64,8 @@ header {
   line-height: 1.5;
   max-height: 100vh;
   z-index: 10;
+  padding: 1rem;
+  position: fixed;
 }
 
 .page {

@@ -3,6 +3,7 @@ import * as THREE from "three";
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import { gsap } from "gsap";
 import * as dat from "dat.gui"; // OR INSTALL 'lil-gui'
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 const canvas = ref<HTMLCanvasElement | null>(null);
 
@@ -100,6 +101,7 @@ const aspectRatio = sizes.width / sizes.height;
 const camera = new THREE.PerspectiveCamera(35, aspectRatio, 0.1, 100);
 camera.position.z = 6;
 cameraGroup.add(camera);
+gui.add(camera.position, "y", -100, 100, 0.01).name("cameraY");
 
 const handleResize = () => {
   if (!camera || !renderer) return;
@@ -168,6 +170,9 @@ let previousTime = 0;
 let currentIntersect: THREE.Intersection | null = null;
 
 const startLoop = (renderer: THREE.WebGLRenderer) => {
+  // const controls = new OrbitControls(camera, canvas.value);
+  // controls.enableDamping = true;
+
   const tick = () => {
     const elapsedTime = clock.getElapsedTime();
     const deltaTime = elapsedTime - previousTime;
@@ -176,12 +181,12 @@ const startLoop = (renderer: THREE.WebGLRenderer) => {
     // Animate camera
     camera.position.y = (-scrollY / sizes.height) * objectsDistance;
 
-    const parallaxX = cursor.x * 0.5;
-    const parallaxY = -cursor.y * 0.5;
+    // const parallaxX = cursor.x * 0.5;
+    // const parallaxY = -cursor.y * 0.5;
 
-    // Easing (Smoothing), faster on more fps screens, thats why we multiply by deltaTime
-    cameraGroup.position.x += ((parallaxX - cameraGroup.position.x) / 0.4) * deltaTime; // (/ 20) alebo (* 0.02)
-    cameraGroup.position.y += ((parallaxY - cameraGroup.position.y) / 0.4) * deltaTime; // cim vacsie cislo tym vacsi easing
+    // // Easing (Smoothing), faster on more fps screens, thats why we multiply by deltaTime
+    // cameraGroup.position.x += ((parallaxX - cameraGroup.position.x) / 0.4) * deltaTime; // (/ 20) alebo (* 0.02)
+    // cameraGroup.position.y += ((parallaxY - cameraGroup.position.y) / 0.4) * deltaTime; // cim vacsie cislo tym vacsi easing
 
     // Animate meshes
     for (const mesh of sectionMeshes) {
@@ -199,25 +204,6 @@ const startLoop = (renderer: THREE.WebGLRenderer) => {
   tick();
 };
 
-const onDoubleClick = () => {
-  const fullscreenElement = document.fullscreenElement || document.webkitFullscreenElement;
-  console.log("", "dbl click");
-  if (!fullscreenElement) {
-    if (canvas.value?.requestFullscreen) {
-      // doesnt work in safari
-      canvas.value?.requestFullscreen();
-    } else if (canvas.value?.webkitRequestFullscreen) {
-      canvas.value?.webkitRequestFullscreen();
-    }
-  } else {
-    if (document.exitFullscreen) {
-      document.exitFullscreen();
-    } else if (document.webkitExitFullscreen) {
-      document.webkitExitFullscreen();
-    }
-  }
-};
-
 onMounted(setRenderer);
 onBeforeUnmount(() => {
   window.removeEventListener("mousemove", handleResize);
@@ -227,8 +213,8 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="page">
-    <div class="wrapper" @mousemove="handleMouseMove" @click="handleClick">
-      <canvas ref="canvas" @dblclick="onDoubleClick" />
+    <div class="wrapper" @mousemove="handleMouseMove">
+      <canvas ref="canvas" />
     </div>
     <section><h1>Test 1</h1></section>
     <section><h1>Test 2</h1></section>
@@ -250,9 +236,6 @@ onBeforeUnmount(() => {
   justify-content: flex-start;
   align-items: center;
   pointer-events: none;
-}
-.page section:first-of-type {
-  height: 65vh;
 }
 
 .page section:nth-of-type(2) {

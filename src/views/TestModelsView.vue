@@ -38,19 +38,31 @@ const gltfLoader = new GLTFLoader();
 //   scene.add(model.scene.children[0]);
 // });
 let mixer: THREE.AnimationMixer | null = null;
+const nieco = new THREE.Group();
+scene.add(nieco);
 
-gltfLoader.load("/src/assets/models/Test2/output.gltf", (gltf) => {
-  console.log("", { scene: gltf.scene });
-  // mixer = new THREE.AnimationMixer(gltf.scene);
-  // const action = mixer.clipAction(gltf.animations[0]);
-  const light = gltf.scene.getObjectByName("PointLight1");
-  console.log("", { light });
+gltfLoader.load("/src/assets/models/profit/gltf_test_07.gltf", (gltf) => {
+  mixer = new THREE.AnimationMixer(gltf.scene);
+  const action = mixer.clipAction(gltf.animations[0]);
+  console.log("", { mixer, hm: gltf.scene });
+  // action.paused = true;
+  // action.time = 0;
   // action.play();
-  gltf.scene.castShadow = true;
-  gltf.scene.receiveShadow = true;
+  // const [obj, obj2] = gltf.scene.children[0].children;
 
-  // scene.add(...gltf.scene.children);
-  scene.add(gltf.scene);
+  // obj.castShadow = true;
+  // obj.receiveShadow = true;
+  // obj2.castShadow = true;
+  // obj2.receiveShadow = true;
+
+  // const greyColor = new THREE.Color("#EAE9E7");
+  // obj.material.color = greyColor;
+
+  // obj.scale.y = 0.1;
+
+  // console.log("", { scene: gltf.scene, obj, obj2 });
+  // // scene.add(...gltf.scene.children);
+  nieco.add(gltf.scene);
 
   updateAllMaterials();
 });
@@ -67,12 +79,8 @@ gltfLoader.load("/src/assets/models/Test2/output.gltf", (gltf) => {
 // });
 const updateAllMaterials = () => {
   scene.traverse((child) => {
-    if (child instanceof THREE.PointLight) {
-      // child.castShadow = true;
-      // child.shadow.mapSize.set(1024, 1024);
-      // child.shadow.camera.far = 95;
-    }
     if (child instanceof THREE.Mesh && child.material instanceof THREE.MeshStandardMaterial) {
+      console.log("", { child });
       /** da sa to nastavit aj defaultne s scene.environment = environmentMap; */
       /** ale kedze to chceme menit v gui tak to tu necham */
       // child.material.envMap = environmentMap;
@@ -80,6 +88,7 @@ const updateAllMaterials = () => {
       // in real project, this is bad idea
       child.castShadow = true;
       child.receiveShadow = true;
+      // child.material.encoding = THREE.sRGBEncoding;
     }
   });
 };
@@ -99,36 +108,44 @@ const environmentMapTexture = cubeTextureLoader.load([
 const floor = new THREE.Mesh(
   new THREE.PlaneGeometry(10, 10),
   new THREE.MeshStandardMaterial({
-    color: "#777777",
-    metalness: 0.3,
-    roughness: 0.4,
-    envMap: environmentMapTexture,
-    envMapIntensity: 0.5,
+    color: "#ffffff",
+    metalness: 0.2,
+    // roughness: 0.4,
+    // envMap: environmentMapTexture,
+    // envMapIntensity: 0.5,
   })
 );
 floor.receiveShadow = true;
 floor.rotation.x = -0.5 * Math.PI;
 // floor.position.y = -1;
 
-// scene.add(floor);
+scene.add(floor);
 
 /**
  * Lights
  */
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
 
-const directionalLight = new THREE.DirectionalLight(0xffffff, 0.2);
-directionalLight.castShadow = true;
-directionalLight.shadow.mapSize.set(1024, 1024);
-directionalLight.shadow.camera.far = 15;
-directionalLight.shadow.camera.left = -7;
-directionalLight.shadow.camera.top = 7;
-directionalLight.shadow.camera.right = 7;
-directionalLight.shadow.camera.bottom = -7;
-directionalLight.position.set(5, 5, 5);
+// const directionalLight = new THREE.DirectionalLight(0xffffff, 0.2);
+// directionalLight.castShadow = true;
+// directionalLight.shadow.mapSize.set(1024, 1024);
+// directionalLight.shadow.camera.far = 15;
+// directionalLight.shadow.camera.left = -7;
+// directionalLight.shadow.camera.top = 7;
+// directionalLight.shadow.camera.right = 7;
+// directionalLight.shadow.camera.bottom = -7;
+// directionalLight.position.set(5, 5, 5);
 
-// scene.add(ambientLight);
-// scene.add(directionalLight);
+const sunLight = new THREE.DirectionalLight("#ffffff", 0.6);
+sunLight.castShadow = true;
+sunLight.shadow.camera.far = 15;
+sunLight.shadow.mapSize.set(1024, 1024); // quality of shadow, cim vacsie rozlisenie tym kvalitnejsie
+sunLight.shadow.normalBias = 0.05;
+sunLight.position.set(5, 4, 5);
+// scene.add(sunLight);
+nieco.add(sunLight);
+
+scene.add(ambientLight);
 
 // Sizes
 const sizes = {
@@ -187,10 +204,10 @@ const setRenderer = () => {
   // renderer.render(scene, camera);
 
   renderer = new THREE.WebGLRenderer({ canvas: canvas.value, antialias: true });
-  renderer.physicallyCorrectLights = true;
+  // renderer.physicallyCorrectLights = true;
   renderer.outputEncoding = THREE.sRGBEncoding;
-  renderer.toneMapping = THREE.ReinhardToneMapping;
-  renderer.toneMappingExposure = 3;
+  // renderer.toneMapping = THREE.ReinhardToneMapping;
+  // renderer.toneMappingExposure = 3;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.setSize(sizes.width, sizes.height);

@@ -300,6 +300,8 @@ onBeforeUnmount(() => {
         <div class="text">Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
       </div>
     </div>
+    <!-- <section class="test">test</section>
+    <section class="test">test2</section> -->
   </div>
 </template>
 
@@ -313,6 +315,10 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.test {
+  height: 100vh;
 }
 
 .loading-bar {

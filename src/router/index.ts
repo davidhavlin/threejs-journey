@@ -184,6 +184,31 @@ const router = createRouter({
       name: "ovb-testing",
       component: () => import("../views/OVBTesting.vue"),
     },
+    {
+      path: "/multiple-scenes",
+      name: "multiple-scenes",
+      component: () => import("../views/MultipleScenes.vue"),
+    },
+    {
+      path: "/resize",
+      name: "resize",
+      component: () => import("../views/ResizeView.vue"),
+    },
+    {
+      path: "/pixel-ratio",
+      name: "pixel-ratio",
+      component: () => import("../views/TestPixelRatio.vue"),
+    },
+    {
+      path: "/pixel-ratio2",
+      name: "pixel-ratio2",
+      component: () => import("../views/TestPixelRatio2.vue"),
+    },
+    {
+      path: "/environment-map",
+      name: "environment-map",
+      component: () => import("../views/EnvironmentMapView.vue"),
+    },
   ],
 });
 
